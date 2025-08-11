@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SOAP API Playground</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1>SOAP API Playground</h1>
+
+    <!-- Calculator -->
+    <section>
+      <h2>Calculator API</h2>
+      <p>
+        WSDL:
+        <a href="http://www.dneonline.com/calculator.asmx?WSDL" target="_blank"
+          >link</a
+        >
+      </p>
+      <input type="number" id="calcNum1" placeholder="First number" />
+      <input type="number" id="calcNum2" placeholder="Second number" />
+      <br />
+      <button id="btnAdd">Add</button>
+      <button id="btnSub">Subtract</button>
+      <button id="btnMul">Multiply</button>
+      <button id="btnDiv">Divide</button>
+      <p><strong>Result:</strong> <span id="calcResult"></span></p>
+    </section>
+
+    <!-- Temperature -->
+    <section>
+      <h2>Temperature Conversion</h2>
+      <p>
+        WSDL:
+        <a
+          href="https://www.w3schools.com/xml/tempconvert.asmx?WSDL"
+          target="_blank"
+          >link</a
+        >
+      </p>
+      <input type="number" id="tempValue" placeholder="Temperature" />
+      <br />
+      <button id="btnCtoF">C → F</button>
+      <button id="btnFtoC">F → C</button>
+      <p><strong>Result:</strong> <span id="tempResult"></span></p>
+    </section>
+
+    <!-- Number Conversion -->
+    <section>
+      <h2>Number → Words/Dollars</h2>
+      <p>
+        WSDL:
+        <a
+          href="https://www.dataaccess.com/webservicesserver/numberconversion.wso?WSDL"
+          target="_blank"
+          >link</a
+        >
+      </p>
+      <input type="number" id="numValue" placeholder="Number" />
+      <br />
+      <button id="btnNumWords">Number to Words</button>
+      <button id="btnNumDollars">Number to Dollars</button>
+      <p><strong>Result:</strong> <span id="numResult"></span></p>
+    </section>
+
+    <!-- Country Info -->
+    <section>
+      <h2>Country Info Service</h2>
+      <p>
+        WSDL:
+        <a
+          href="http://webservices.oorsprong.org/websamples.countryinfo/CountryInfoService.wso?WSDL"
+          target="_blank"
+          >link</a
+        >
+      </p>
+      <input
+        type="text"
+        id="countryCode"
+        placeholder="Country code (e.g., US)"
+        maxlength="2"
+      />
+      <br />
+      <button id="btnCapital">Get Capital</button>
+      <button id="btnFullInfo">Get Full Info</button>
+      <p><strong>Result:</strong> <span id="countryResult"></span></p>
+    </section>
+
+    <script src="app.js"></script>
+  </body>
+</html>

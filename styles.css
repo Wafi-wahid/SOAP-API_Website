@@ -1,0 +1,105 @@
+/* General page setup */
+body {
+  font-family: "Segoe UI", Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f4f6f9;
+  color: #333;
+}
+
+h1 {
+  text-align: center;
+  padding: 20px;
+  margin: 0;
+  font-size: 2rem;
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  color: #444;
+  border-left: 5px solid #4facfe;
+  padding-left: 10px;
+  margin-bottom: 15px;
+}
+
+/* Sections */
+section {
+  max-width: 700px;
+  margin: 20px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Inputs & Buttons */
+input {
+  margin: 5px 0;
+  padding: 8px 10px;
+  width: calc(50% - 12px);
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: border 0.2s ease;
+}
+
+input:focus {
+  border-color: #4facfe;
+  box-shadow: 0 0 4px rgba(79, 172, 254, 0.4);
+}
+
+button {
+  background: #4facfe;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  margin: 6px 4px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+button:hover {
+  background: #3d94f6;
+  transform: scale(1.03);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* Result display */
+p strong {
+  color: #555;
+}
+
+span.result {
+  display: inline-block;
+  background: #f1f8ff;
+  border-left: 4px solid #4facfe;
+  padding: 5px 10px;
+  margin-top: 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  color: #222;
+  min-width: 50px;
+}
+
+a {
+  color: #4facfe;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
