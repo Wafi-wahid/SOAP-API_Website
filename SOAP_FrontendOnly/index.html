@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SOAP API Playground (Frontend Only)</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background: #f5f5f5;
+      }
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+      section {
+        background: white;
+        border-radius: 10px;
+        padding: 15px;
+        margin: 15px auto;
+        max-width: 500px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+        color: #444;
+        margin-bottom: 5px;
+      }
+      p {
+        font-size: 14px;
+        color: #666;
+      }
+      input,
+      button {
+        margin: 5px 0;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+      input {
+        width: calc(50% - 10px);
+      }
+      button {
+        background: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      .result {
+        background: #f0f8ff;
+        padding: 6px;
+        border-radius: 4px;
+        margin-top: 5px;
+        display: inline-block;
+        min-width: 150px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>SOAP API Playground</h1>
+
+    <!-- Calculator -->
+    <section>
+      <h2>Calculator API</h2>
+      <p>
+        WSDL:
+        <a href="http://www.dneonline.com/calculator.asmx?WSDL" target="_blank"
+          >link</a
+        >
+      </p>
+      <input type="number" id="calcNum1" placeholder="First number" />
+      <input type="number" id="calcNum2" placeholder="Second number" /><br />
+      <button onclick="callCalculator('Add')">Add</button>
+      <button onclick="callCalculator('Subtract')">Subtract</button>
+      <button onclick="callCalculator('Multiply')">Multiply</button>
+      <button onclick="callCalculator('Divide')">Divide</button>
+      <p>
+        <strong>Result:</strong> <span id="calcResult" class="result"></span>
+      </p>
+    </section>
+
+    <!-- Temperature -->
+    <section>
+      <h2>Temperature Conversion</h2>
+      <p>
+        WSDL:
+        <a
+          href="https://www.w3schools.com/xml/tempconvert.asmx?WSDL"
+          target="_blank"
+          >link</a
+        >
+      </p>
+      <input type="number" id="tempValue" placeholder="Temperature" /><br />
+      <button onclick="callTemp('CelsiusToFahrenheit')">C → F</button>
+      <button onclick="callTemp('FahrenheitToCelsius')">F → C</button>
+      <p>
+        <strong>Result:</strong> <span id="tempResult" class="result"></span>
+      </p>
+    </section>
+
+    <!-- Number Conversion -->
+    <section>
+      <h2>Number → Words/Dollars</h2>
+      <p>
+        WSDL:
+        <a
+          href="https://www.dataaccess.com/webservicesserver/numberconversion.wso?WSDL"
+          target="_blank"
+          >link</a
+        >
+      </p>
+      <input type="number" id="numValue" placeholder="Number" /><br />
+      <button onclick="callNumber('NumberToWords')">Number to Words</button>
+      <button onclick="callNumber('NumberToDollars')">Number to Dollars</button>
+      <p>
+        <strong>Result:</strong> <span id="numResult" class="result"></span>
+      </p>
+    </section>
+
+    <!-- Country Info -->
+    <section>
+      <h2>Country Info Service</h2>
+      <p>
+        WSDL:
+        <a
+          href="http://webservices.oorsprong.org/websamples.countryinfo/CountryInfoService.wso?WSDL"
+          target="_blank"
+          >link</a
+        >
+      </p>
+      <input
+        type="text"
+        id="countryCode"
+        placeholder="Country code (e.g., US)"
+        maxlength="2"
+      /><br />
+      <button onclick="callCountry('CapitalCity')">Get Capital</button>
+      <button onclick="callCountry('FullCountryInfo')">Get Full Info</button>
+      <p>
+        <strong>Result:</strong> <span id="countryResult" class="result"></span>
+      </p>
+    </section>
+
+    <script>
+      async function sendSoap(apiUrl, action, xml, resultTag) {
+        try {
+          const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(
+            apiUrl
+          )}`;
+          const res = await fetch(proxyUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "text/xml; charset=utf-8",
+              ...(action && { SOAPAction: action }),
+            },
+            body: xml,
+          });
+          const text = await res.text();
+          const parser = new DOMParser();
+          const xmlDoc = parser.parseFromString(text, "text/xml");
+          const resultNode = xmlDoc.getElementsByTagNameNS("*", resultTag)[0];
+          return resultNode ? resultNode.textContent.trim() : "No value found";
+        } catch (err) {
+          return "Error: " + err.message;
+        }
+      }
+
+      // Calculator
+      async function callCalculator(op) {
+        const a = document.getElementById("calcNum1").value;
+        const b = document.getElementById("calcNum2").value;
+        const xml = `<?xml version="1.0" encoding="utf-8"?>
+  <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                 xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap:Body>
+      <${op} xmlns="http://tempuri.org/">
+        <intA>${a}</intA>
+        <intB>${b}</intB>
+      </${op}>
+    </soap:Body>
+  </soap:Envelope>`;
+        document.getElementById("calcResult").textContent = await sendSoap(
+          "http://www.dneonline.com/calculator.asmx",
+          `http://tempuri.org/${op}`,
+          xml,
+          `${op}Result`
+        );
+      }
+
+      // Temperature
+      async function callTemp(op) {
+        const val = document.getElementById("tempValue").value;
+        const tag = op === "CelsiusToFahrenheit" ? "Celsius" : "Fahrenheit";
+        const xml = `<?xml version="1.0" encoding="utf-8"?>
+  <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                 xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap:Body>
+      <${op} xmlns="https://www.w3schools.com/xml/">
+        <${tag}>${val}</${tag}>
+      </${op}>
+    </soap:Body>
+  </soap:Envelope>`;
+        document.getElementById("tempResult").textContent = await sendSoap(
+          "https://www.w3schools.com/xml/tempconvert.asmx",
+          `https://www.w3schools.com/xml/${op}`,
+          xml,
+          `${op}Result`
+        );
+      }
+
+      // Number Conversion
+      async function callNumber(op) {
+        const val = document.getElementById("numValue").value;
+        const tag = op === "NumberToWords" ? "ubiNum" : "dNum";
+        const xml = `<?xml version="1.0" encoding="utf-8"?>
+  <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                 xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap:Body>
+      <${op} xmlns="http://www.dataaccess.com/webservicesserver/">
+        <${tag}>${val}</${tag}>
+      </${op}>
+    </soap:Body>
+  </soap:Envelope>`;
+        document.getElementById("numResult").textContent = await sendSoap(
+          "https://www.dataaccess.com/webservicesserver/numberconversion.wso",
+          `http://www.dataaccess.com/webservicesserver/${op}`,
+          xml,
+          `${op}Result`
+        );
+      }
+
+      // Country Info
+      async function callCountry(op) {
+        const iso = document.getElementById("countryCode").value;
+        const ns = "http://www.oorsprong.org/websamples.countryinfo";
+        const xml = `<?xml version="1.0" encoding="utf-8"?>
+  <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap:Body>
+      <${op} xmlns="${ns}">
+        <sCountryISOCode>${iso}</sCountryISOCode>
+      </${op}>
+    </soap:Body>
+  </soap:Envelope>`;
+        const resultTag =
+          op === "CapitalCity" ? "CapitalCityResult" : "FullCountryInfoResult";
+        document.getElementById("countryResult").textContent = await sendSoap(
+          "http://webservices.oorsprong.org/websamples.countryinfo/CountryInfoService.wso",
+          `${ns}/${op}`,
+          xml,
+          resultTag
+        );
+      }
+    </script>
+  </body>
+</html>
